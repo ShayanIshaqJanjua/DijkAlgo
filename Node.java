@@ -5,9 +5,9 @@ public class Node {
         xPos = x;
         yPos = y;
     }
-    public float distTo(Node other){
+    public double distTo(Node other){
         float dx = xPos - other.xPos;
         float dy = yPos - other.yPos;
-        return dx * dx + dy * dy;
+        return Math.sqrt(dx * dx + dy * dy);
     }
 }
