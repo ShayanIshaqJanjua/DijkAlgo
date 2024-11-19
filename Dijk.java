@@ -4,12 +4,13 @@ import java.util.List;
 
 public class Dijk {
     public static List<Node> nodes = new ArrayList<Node>();
+
     public static List<int[]> nodeConnections = new ArrayList<>();
-    public static HashSet<Node> nodesVisited = new HashSet<Node>();
+    public static HashSet<Integer> nodesVisited = new HashSet<Integer>();
 
     public static void main(String[] args) {
         setBoard();
-        new Dijk().start(nodes.get(0), nodes.get(5));
+        new Dijk().start(0, 5);
     }
 
     public static void setBoard() {
@@ -29,8 +30,9 @@ public class Dijk {
         nodeConnections.add(new int[]{3, 2});
     }
 
-    public void start(Node startNode, Node endNode) {
-        nodesVisited.add(startNode);
+    public void start(int startNode, int end) {
+        nodesVisited.add(0);
+
 
     }
 
