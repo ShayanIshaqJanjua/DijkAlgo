@@ -1,16 +1,17 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class Dijk {
     public static List<Node> nodes = new ArrayList<Node>();
 
-    public static List<int[]> nodeConnections = new ArrayList<>();
+    public static HashMap<Integer, int[]> nodeConnections = new HashMap<>();
     public static HashSet<Integer> nodesVisited = new HashSet<Integer>();
 
     public static void main(String[] args) {
         setBoard();
         new Dijk().start(0, 5);
+        new Dijk().start(5, 0);
+        new Dijk().start(1, 4);
+
     }
 
     public static void setBoard() {
@@ -20,12 +21,15 @@ public class Dijk {
         nodes.add(new Node(10f,40f));
         nodes.add(new Node(10f,9f));
         nodes.add(new Node(2f,40f));
-        nodeConnections.add(new int[]{1, 2});
-        nodeConnections.add(new int[]{3, 0,});
-        nodeConnections.add(new int[]{1, 2, 4});
-        nodeConnections.add(new int[]{ 1,5});
-        nodeConnections.add(new int[]{2,5});
-        nodeConnections.add(new int[]{4,3});
+        nodeConnections.put(0, new int[]{1, 2});
+        nodeConnections.put(1,new int[]{3, 0,});
+        nodeConnections.put(2,new int[]{1, 2, 4});
+        nodeConnections.put(3,new int[]{ 1,5});
+        nodeConnections.put(4,new int[]{2,5});
+        nodeConnections.put(5,new int[]{4,3});
+    }
+
+    public void resetVisited() {
         nodesVisited.add(0);
         nodesVisited.add(1);
         nodesVisited.add(2);
@@ -35,23 +39,24 @@ public class Dijk {
     }
 
     public void start(int startNode, int end) {
+        resetVisited();
         nodesVisited.remove(startNode);
         int currNode = startNode;
-        Double[] distances = {Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
+        double[] distances = new double[6];
+        Arrays.fill(distances, Double.POSITIVE_INFINITY);
         int[] prev = new int[nodes.size()];
         distances[startNode] = 0.0;
-        Double cumulativeDist = 0.0;
         while(!nodesVisited.isEmpty()) {
             Node currAccNode = nodes.get(currNode);
             int[] currentConnect = nodeConnections.get(currNode);
             for(int node : currentConnect) {
-                double dist = currAccNode.distTo(nodes.get(node)) + cumulativeDist;
+                double dist = currAccNode.distTo(nodes.get(node)) + distances[currNode];
                 if(dist < distances[node]) {
                     distances[node] = dist;
                     prev[node] = currNode;
                 }
             }
-            Double lowestDif = Double.POSITIVE_INFINITY;
+            double lowestDif = Double.POSITIVE_INFINITY;
             int nextNode = 0;
             for(int i = 0; i < nodes.size(); i++) {
                 if(distances[i] < lowestDif && nodesVisited.contains(i)) {
@@ -59,11 +64,11 @@ public class Dijk {
                     nextNode = i;
                 }
             }
-            cumulativeDist += lowestDif;
             currNode=nextNode;
             nodesVisited.remove(currNode);
         }
-        System.out.println(distances[end]);
+
+        System.out.println("\n\nThe distance from the start to end node is : " + distances[end]);
 
         int n = end;
         System.out.print("The shortest path between node " + startNode + " and node " + n + " is ");
