@@ -10,4 +10,5 @@ public class Node {
         float dy = yPos - other.yPos;
         return Math.sqrt(dx * dx + dy * dy);
     }
+
 }
